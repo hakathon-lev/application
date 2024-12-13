@@ -52,14 +52,14 @@ class _HomeTabState extends State<HomeTab> {
     return Scaffold(
       appBar: AppBar(
         title: Text(_tabTitles[_currentIndex]),
-        backgroundColor: Colors.blue,
+        backgroundColor: Colors.deepOrange,
       ),
       drawer: Drawer(
         child: ListView(
           padding: EdgeInsets.zero,
           children: [
             const DrawerHeader(
-              decoration: BoxDecoration(color: Colors.blue),
+              decoration: BoxDecoration(color: Colors.deepOrange),
               child: Text(
                 'Navigation',
                 style: TextStyle(color: Colors.white, fontSize: 24),

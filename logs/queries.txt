@@ -1,0 +1,47 @@
+Query: 324356
+Query: 324356
+Query: 324356
+Query: 324356
+Query: rrrr
+Case Location: 
+Exit Point: 
+Case Type: 
+Timestamp: 2024-12-13 13:47:55
+Actions: 
+--------------------------
+Case Location: 
+Exit Point: 
+Case Type: 
+Timestamp: 2024-12-13 13:48:18
+Actions: 
+--------------------------
+Case Location: dtrygu
+Exit Point: vbhuinj
+Case Type: gvbhnj
+Timestamp: 2024-12-13 13:49:20
+Actions: cgvyubhinj
+--------------------------
+Case Location: dtrygu
+Exit Point: vbhuinj
+Case Type: gvbhnj
+Timestamp: 2024-12-13 13:53:14
+Actions: cgvyubhinj
+--------------------------
+Case Location: dtrygu
+Exit Point: vbhuinj
+Case Type: gvbhnj
+Timestamp: 2024-12-13 13:54:54
+Actions: cgvyubhinj
+--------------------------
+Case Location: dfsf
+Exit Point: asdgf
+Case Type: wewrtyru
+Timestamp: 2024-12-13 13:56:35
+Actions: 
+--------------------------
+Case Location: 
+Exit Point: 
+Case Type: 
+Timestamp: 2024-12-13 13:58:31
+Actions: 
+--------------------------

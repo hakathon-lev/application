@@ -1,0 +1,33 @@
+Query: ergfds
+Query: hi
+Query: hi
+Case Location: wertr
+Exit Point: 
+Case Type: 
+Timestamp: 
+Actions: 
+--------------------------
+Case Location: wertr
+Exit Point: 3456
+Case Type: 3
+Timestamp: 10:39
+Actions: 
+--------------------------
+Case Location: 
+Exit Point: 
+Case Type: 
+Timestamp: 2024-12-12 19:17:40
+Actions: 
+--------------------------
+Case Location: hui
+Exit Point: 
+Case Type: 
+Timestamp: 2024-12-12 19:55:43
+Actions: 
+--------------------------
+Case Location: 
+Exit Point: 
+Case Type: 
+Timestamp: 2024-12-13 14:05:03
+Actions: 
+--------------------------
