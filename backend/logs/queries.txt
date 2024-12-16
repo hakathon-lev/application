@@ -31,3 +31,39 @@ Case Type:
 Timestamp: 2024-12-13 14:05:03
 Actions: 
 --------------------------
+Case Location: 
+Exit Point: 
+Case Type: 
+Timestamp: 2024-12-13 14:38:53
+Actions: 
+--------------------------
+Case Location: 
+Exit Point: 
+Case Type: 
+Timestamp: 2024-12-14 18:30:45
+Actions: 
+--------------------------
+Case Location: 
+Exit Point: 
+Case Type: 
+Timestamp: 2024-12-14 18:33:53
+Actions: 
+--------------------------
+Case Location: 
+Exit Point: 
+Case Type: 
+Timestamp: 2024-12-14 18:36:01
+Actions: 
+--------------------------
+Case Location: 
+Exit Point: 
+Case Type: 
+Timestamp: 2024-12-14 19:48:17
+Actions: 
+--------------------------
+Case Location: ertyu
+Exit Point: tyu
+Case Type: jkfgh
+Timestamp: 2024-12-15 14:06:10
+Actions: 
+--------------------------

@@ -4,6 +4,7 @@ import 'tabs/info_analysis_tab.dart';
 import 'tabs/patient_management_tab.dart';
 import 'tabs/post_event_tab.dart';
 import 'tabs/home_page.dart';
+import 'pageList/contact_us_page.dart'; // Import the ContactUsPage file
 
 void main() {
   runApp(const MaterialApp(
@@ -29,7 +30,7 @@ class HomeTab extends StatefulWidget {
 }
 
 class _HomeTabState extends State<HomeTab> {
-  int _currentIndex = 0; // Ensure the default index is 0, which is the HomePage
+  int _currentIndex = 0;
 
   final List<Widget> _tabs = [
     const HomePage(),
@@ -40,11 +41,11 @@ class _HomeTabState extends State<HomeTab> {
   ];
 
   final List<String> _tabTitles = [
-    'Home', // Missing comma between 'Home' and 'Data Collection'
+    'Home',
     'Data Collection',
     'Information Analysis',
     'Patient Management',
-    'Post-Event'
+    'Post-Event',
   ];
 
   @override
@@ -70,15 +71,28 @@ class _HomeTabState extends State<HomeTab> {
               title: const Text('Home'),
               onTap: () {
                 setState(() {
-                  _currentIndex = 0; // Ensure Home is selected
+                  _currentIndex = 0;
                 });
-                Navigator.pop(context); // Close the drawer
+                Navigator.pop(context);
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.contact_page),
+              title: const Text('Contact Us'),
+              onTap: () {
+                Navigator.pop(context);
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const ContactUsPage(),
+                  ),
+                );
               },
             ),
           ],
         ),
       ),
-      body: _tabs[_currentIndex], // Display the selected tab
+      body: _tabs[_currentIndex],
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _currentIndex,
         type: BottomNavigationBarType.fixed,

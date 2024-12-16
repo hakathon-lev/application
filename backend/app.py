@@ -5,6 +5,7 @@ import speech_recognition as sr
 import numpy as np
 import soundfile as sf
 import io
+import json
 
 app = Flask(__name__)
 CORS(app)
@@ -16,28 +17,39 @@ os.makedirs("logs", exist_ok=True)
 def analyze():
     try:
         data = request.json
-        
+
         if not data:
             return jsonify({"error": "No JSON data provided"}), 400
-        
-        print("Received data:", data)
-        
-        log_entry = (
-            f"Case Location: {data.get('caseLocation', 'N/A')}\n"
-            f"Exit Point: {data.get('exitPoint', 'N/A')}\n"
-            f"Case Type: {data.get('caseType', 'N/A')}\n"
-            f"Timestamp: {data.get('timestamp', 'N/A')}\n"
-            f"Actions: {data.get('actions', 'N/A')}\n"
-            "--------------------------\n"
-        )
 
-        # Ensure logs directory and write to the file
+        print("Received data:", data)
+
+        # Ensure logs directory and log file exist
         log_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "logs")
         os.makedirs(log_dir, exist_ok=True)
-        log_file_path = os.path.join(log_dir, "queries.txt")
+        log_file_path = os.path.join(log_dir, "queries.json")
 
-        with open(log_file_path, "a", encoding="utf-8") as file:
-            file.write(log_entry)
+        # Read the existing log file or create a new one
+        if os.path.exists(log_file_path):
+            with open(log_file_path, "r", encoding="utf-8") as file:
+                try:
+                    logs = json.load(file)
+                except json.JSONDecodeError:
+                    logs = []
+        else:
+            logs = []
+
+        # Add the new log entry
+        logs.append({
+            "caseLocation": data.get("caseLocation", "N/A"),
+            "exitPoint": data.get("exitPoint", "N/A"),
+            "caseType": data.get("caseType", "N/A"),
+            "timestamp": data.get("timestamp", "N/A"),
+            "actions": data.get("actions", "N/A")
+        })
+
+        # Write back to the JSON file
+        with open(log_file_path, "w", encoding="utf-8") as file:
+            json.dump(logs, file, indent=4, ensure_ascii=False)
 
         return jsonify({"message": "Data logged successfully!", "details": data}), 200
 
@@ -53,7 +65,7 @@ def transcribe():
     file = request.files['file']
     audio_data, samplerate = sf.read(file)
     recognizer = sr.Recognizer()
-    
+
     # Convert numpy array to raw PCM data
     audio_data = audio_data.astype(np.int16).tobytes()
     sample_width = np.dtype(np.int16).itemsize

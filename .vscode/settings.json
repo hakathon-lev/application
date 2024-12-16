@@ -1,3 +1,8 @@
 {
-    "cmake.sourceDirectory": "C:/Users/yossi/StudioProjects/Hakathon/windows/flutter"
+    "cmake.sourceDirectory": "C:/Users/yossi/StudioProjects/Hakathon/windows/flutter",
+    "java.configuration.updateBuildConfiguration": "automatic",
+    "java.compile.nullAnalysis.mode": "automatic",
+    "cSpell.words": [
+        "buildscript"
+    ]
 }
