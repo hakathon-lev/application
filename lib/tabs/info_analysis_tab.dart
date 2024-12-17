@@ -1,96 +1,101 @@
 import 'package:flutter/material.dart';
-import 'package:record/record.dart';
+import 'package:mic_stream/mic_stream.dart';
+import 'package:http/http.dart' as http;
+import 'package:permission_handler/permission_handler.dart';
+import 'dart:convert';
+import 'dart:async';
 
 class InfoAnalysisTab extends StatefulWidget {
   const InfoAnalysisTab({super.key});
 
   @override
-  _InfoAnalysisTabState createState() => _InfoAnalysisTabState();
+  _AudioStreamManagerState createState() => _AudioStreamManagerState();
 }
 
-class _InfoAnalysisTabState extends State<InfoAnalysisTab> {
-  late Record audioRecord;
-  bool isRecording = false;
-  String audioPath = '';
-  int number = 0;
+class _AudioStreamManagerState extends State<InfoAnalysisTab> {
+  bool _isRecording = false;
+  Stream<List<int>>? _micStream;
+  StreamSubscription? _audioSubscription;
+  Timer? _debounceTimer;
 
-  @override
-  void initState() {
-    audioRecord = Record();
-    super.initState();
+  Future<void> _startAudioCapture() async {
+    var status = await Permission.microphone.request();
+
+    if (status.isGranted) {
+      try {
+        _micStream = await MicStream.microphone(
+          audioSource: AudioSource.MIC,
+          sampleRate: 44100,
+        );
+
+        setState(() {
+          _isRecording = true;
+        });
+
+        _audioSubscription = _micStream?.listen((audioChunk) {
+          // Debounce to prevent overwhelming the backend
+          _debounceTimer?.cancel();
+          _debounceTimer = Timer(const Duration(milliseconds: 100), () {
+            _sendAudioToBackend(audioChunk);
+          });
+        }, onError: (error) {
+          print('Audio capture error: $error');
+          _stopAudioCapture();
+        });
+      } catch (e) {
+        print('Failed to start audio capture: $e');
+        ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('Failed to start audio capture: $e')));
+      }
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Microphone permission denied')));
+    }
+  }
+
+  Future<void> _sendAudioToBackend(List<int> audioChunk) async {
+    try {
+      // Base64 encode to send as JSON
+      String encodedAudio = base64Encode(audioChunk);
+
+      final response = await http.post(Uri.parse('http://localhost:5000/audio'),
+          headers: {'Content-Type': 'application/json'},
+          body: jsonEncode({
+            'audio': encodedAudio,
+            'timestamp': DateTime.now().millisecondsSinceEpoch
+          }));
+
+      if (response.statusCode != 200) {
+        print('Backend response error: ${response.body}');
+      }
+    } catch (e) {
+      print('Failed to send audio chunk: $e');
+    }
+  }
+
+  void _stopAudioCapture() {
+    _audioSubscription?.cancel();
+    _micStream = null;
+    _debounceTimer?.cancel();
+
+    setState(() {
+      _isRecording = false;
+    });
   }
 
   @override
   void dispose() {
-    audioRecord.dispose();
+    _stopAudioCapture();
     super.dispose();
-  }
-
-  Future<void> startRecording() async {
-    try {
-      if (await audioRecord.hasPermission()) {
-        // Specify the file path and format
-        String filePath = './assets/audio ${number++}.mp3';
-
-        number = number + 1;
-
-        await audioRecord.start(
-          path: filePath, // Specify the path where the file will be saved
-          encoder: AudioEncoder.aacLc, // Use AAC codec (compatible with MP4)
-          bitRate: 128000, // Optional: Set a bit rate
-          samplingRate: 44100, // Optional: Set a sampling rate
-        );
-
-        setState(() {
-          isRecording = true;
-          audioPath = filePath; // Save the path for later use
-        });
-      }
-    } catch (e) {
-      print('Error starting recording : $e');
-    }
-  }
-
-  Future<void> stopRecording() async {
-    try {
-      String? path = await audioRecord.stop();
-      setState(() {
-        isRecording = false;
-        audioPath = path!;
-      });
-    } catch (e) {
-      print('Error starting recording : $e');
-    }
   }
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            TextField(
-              decoration: const InputDecoration(
-                labelText: 'Transcript Input',
-                border: OutlineInputBorder(),
-              ),
-              maxLines: 4,
-            ),
-            const SizedBox(height: 10),
-            ElevatedButton(
-              onPressed: isRecording ? stopRecording : startRecording,
-              child: Text(isRecording ? 'Stop Recording' : 'Start Recording'),
-            ),
-            const SizedBox(height: 10),
-            ElevatedButton(
-              onPressed: () {
-                // Add analysis logic here
-              },
-              child: const Text('Analyze Transcript'),
-            ),
-          ],
+    return Scaffold(
+      body: Center(
+        child: ElevatedButton(
+          onPressed: _isRecording ? _stopAudioCapture : _startAudioCapture,
+          child: Text(_isRecording ? 'Stop Recording' : 'Start Recording'),
         ),
       ),
     );

@@ -1,36 +1,25 @@
 pluginManagement {
+    def flutterSdkPath = {
+        def properties = new Properties()
+        file("local.properties").withInputStream { properties.load(it) }
+        def flutterSdkPath = properties.getProperty("flutter.sdk")
+        assert flutterSdkPath != null, "flutter.sdk not set in local.properties"
+        return flutterSdkPath
+    }()
+
+    includeBuild("$flutterSdkPath/packages/flutter_tools/gradle")
+
     repositories {
-        gradlePluginPortal()
         google()
         mavenCentral()
+        gradlePluginPortal()
     }
 }
 
 plugins {
-    id 'org.gradle.toolchains.foojay-resolver-convention' version '0.4.0'
+    id "dev.flutter.flutter-plugin-loader" version "1.0.0"
+    id "com.android.application" version "7.3.0" apply false
+    id "org.jetbrains.kotlin.android" version "1.7.10" apply false
 }
 
-dependencyResolutionManagement {
-    repositoriesMode.set(RepositoriesMode.PREFER_PROJECT)
-    repositories {
-        google()
-        mavenCentral()
-    }
-}
-
-rootProject.name = 'hakathon'
-include ':app'
-
-def flutterProjectRoot = rootProject.projectDir.parentFile.getAbsolutePath()
-def plugins = new File(flutterProjectRoot, '.flutter-plugins')
-def pluginsFile = new File(plugins, 'flutter.plugins')
-
-if (pluginsFile.exists()) {
-    pluginsFile.eachLine { line ->
-        def pluginLine = line.split('=')
-        def pluginName = pluginLine[0].trim()
-        def pluginPath = pluginLine[1].trim()
-        include ":$pluginName"
-        project(":$pluginName").projectDir = new File(pluginPath, 'android')
-    }
-}
+include ":app"
