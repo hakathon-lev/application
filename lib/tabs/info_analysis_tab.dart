@@ -9,64 +9,77 @@ class InfoAnalysisTab extends StatefulWidget {
   const InfoAnalysisTab({super.key});
 
   @override
-  _AudioStreamManagerState createState() => _AudioStreamManagerState();
+  _InfoAnalysisTabState createState() => _InfoAnalysisTabState();
 }
 
-class _AudioStreamManagerState extends State<InfoAnalysisTab> {
+class _InfoAnalysisTabState extends State<InfoAnalysisTab> {
   bool _isRecording = false;
   Stream<List<int>>? _micStream;
   StreamSubscription? _audioSubscription;
   Timer? _debounceTimer;
+  bool _isDisposed = false;
 
   Future<void> _startAudioCapture() async {
     var status = await Permission.microphone.request();
-
-    if (status.isGranted) {
-      try {
-        _micStream = await MicStream.microphone(
-          audioSource: AudioSource.MIC,
-          sampleRate: 44100,
+    if (!status.isGranted) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Microphone permission denied')),
         );
+      }
+      return;
+    }
 
-        setState(() {
-          _isRecording = true;
+    try {
+      _micStream = await MicStream.microphone(
+        audioSource: AudioSource.MIC,
+        sampleRate: 44100,
+      );
+
+      if (_isDisposed) return;
+
+      setState(() {
+        _isRecording = true;
+      });
+
+      _audioSubscription = _micStream?.listen((audioChunk) {
+        _debounceTimer?.cancel();
+        _debounceTimer = Timer(const Duration(milliseconds: 100), () {
+          _sendAudioToBackend(audioChunk);
         });
-
-        _audioSubscription = _micStream?.listen((audioChunk) {
-          // Debounce to prevent overwhelming the backend
-          _debounceTimer?.cancel();
-          _debounceTimer = Timer(const Duration(milliseconds: 100), () {
-            _sendAudioToBackend(audioChunk);
-          });
-        }, onError: (error) {
+      }, onError: (error) {
+        if (!_isDisposed) {
           print('Audio capture error: $error');
           _stopAudioCapture();
-        });
-      } catch (e) {
+        }
+      });
+    } catch (e) {
+      if (!_isDisposed) {
         print('Failed to start audio capture: $e');
-        ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Failed to start audio capture: $e')));
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('Failed to start audio capture: $e')),
+          );
+        }
       }
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Microphone permission denied')));
     }
   }
 
   Future<void> _sendAudioToBackend(List<int> audioChunk) async {
     try {
-      // Base64 encode to send as JSON
       String encodedAudio = base64Encode(audioChunk);
 
-      final response = await http.post(Uri.parse('http://localhost:5000/audio'),
-          headers: {'Content-Type': 'application/json'},
-          body: jsonEncode({
-            'audio': encodedAudio,
-            'timestamp': DateTime.now().millisecondsSinceEpoch
-          }));
+      final response = await http.post(
+        Uri.parse('http://192.168.1.100:5000/audio'),
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({
+          'audio': encodedAudio,
+          'timestamp': DateTime.now().millisecondsSinceEpoch,
+        }),
+      );
 
       if (response.statusCode != 200) {
-        print('Backend response error: ${response.body}');
+        print('Backend error: ${response.body}');
       }
     } catch (e) {
       print('Failed to send audio chunk: $e');
@@ -75,16 +88,21 @@ class _AudioStreamManagerState extends State<InfoAnalysisTab> {
 
   void _stopAudioCapture() {
     _audioSubscription?.cancel();
-    _micStream = null;
-    _debounceTimer?.cancel();
+    _audioSubscription = null;
 
-    setState(() {
-      _isRecording = false;
-    });
+    _debounceTimer?.cancel();
+    _debounceTimer = null;
+
+    if (!_isDisposed) {
+      setState(() {
+        _isRecording = false;
+      });
+    }
   }
 
   @override
   void dispose() {
+    _isDisposed = true;
     _stopAudioCapture();
     super.dispose();
   }

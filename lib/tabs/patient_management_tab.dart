@@ -1,47 +1,7 @@
 import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-
-class PatientData {
-  final String caseNumber;
-  final String unitNumber;
-  final String date;
-  final Map<String, String> patientDetails;
-  final Map<String, String> eventDetails;
-  final Map<String, String> caseDetails;
-  final List<Map<String, dynamic>> metrics;
-  final List<Map<String, dynamic>> treatments;
-  final List<Map<String, dynamic>> medications;
-  final Map<String, String> evacuation;
-
-  PatientData({
-    required this.caseNumber,
-    required this.unitNumber,
-    required this.date,
-    required this.patientDetails,
-    required this.eventDetails,
-    required this.caseDetails,
-    required this.metrics,
-    required this.treatments,
-    required this.medications,
-    required this.evacuation,
-  });
-
-  Map<String, dynamic> toJson() {
-    return {
-      "מס משימה": caseNumber,
-      "מס ניידת": unitNumber,
-      "תאריך": date,
-      "פרטי המטופל": patientDetails,
-      "פרטי האירוע": eventDetails,
-      "פירוט המקרה": caseDetails,
-      "מדדים": metrics,
-      "טיפולים": treatments,
-      "טיפול תרופתי": medications,
-      "פינוי": evacuation,
-    };
-  }
-}
+import '../classes/patient_data.dart';
 
 class PatientManagementTab extends StatefulWidget {
   const PatientManagementTab({super.key});
@@ -56,18 +16,7 @@ class _PatientManagementTabState extends State<PatientManagementTab> {
   late Map<String, TextEditingController> eventControllers;
   late Map<String, TextEditingController> caseControllers;
 
-  final PatientData patientData = PatientData(
-    caseNumber: '12345',
-    unitNumber: '56789',
-    date: '2024-12-17',
-    patientDetails: {"שם": "יוסי", "ת.ז": "123456789"},
-    eventDetails: {"מיקום": "תל אביב", "זמן": "12:00"},
-    caseDetails: {"תיאור": "כאב חזה חריף"},
-    metrics: [],
-    treatments: [],
-    medications: [],
-    evacuation: {"סוג פינוי": "אמבולנס"},
-  );
+  final PatientData patientData = PatientData();
 
   @override
   void initState() {
@@ -77,9 +26,32 @@ class _PatientManagementTabState extends State<PatientManagementTab> {
       "מס ניידת": patientData.unitNumber,
       "תאריך": patientData.date,
     });
-    patientControllers = _initializeControllers(patientData.patientDetails);
-    eventControllers = _initializeControllers(patientData.eventDetails);
-    caseControllers = _initializeControllers(patientData.caseDetails);
+    patientControllers = _initializeControllers({
+      "סוג תעודה": patientData.documentType,
+      "גיל": patientData.age.toString(),
+      "שם האב": patientData.fatherName,
+      "מייל": patientData.email,
+      "מין": patientData.gender,
+      "ת. לידה": patientData.birthDate,
+      "קופת חולים": patientData.healthFund,
+      "כתובת": patientData.address,
+      "שם מלא": patientData.fullName,
+      "טלפון": patientData.phone,
+      "ישוב": patientData.settlement,
+    });
+    eventControllers = _initializeControllers({
+      "כתובת": patientData.eventAddress,
+      "מקום האירוע": patientData.eventLocation,
+      "עיר": patientData.city,
+    });
+    caseControllers = _initializeControllers({
+      "המקרה שנמצא": patientData.caseFound,
+      "תלונה עיקרית": patientData.mainComplaint,
+      "סטטוס המטופל": patientData.patientStatus,
+      "רקע רפואי": patientData.medicalBackground,
+      "רגישויות": patientData.allergies,
+      "תרופות קבועות": patientData.regularMedications,
+    });
   }
 
   Map<String, TextEditingController> _initializeControllers(
@@ -101,7 +73,7 @@ class _PatientManagementTabState extends State<PatientManagementTab> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Patient Management'),
+        title: const Text('Medical Report'),
         backgroundColor: Colors.orange,
       ),
       body: Center(
@@ -207,16 +179,34 @@ class _PatientManagementTabState extends State<PatientManagementTab> {
         caseNumber: generalControllers["מס משימה"]?.text ?? "N/A",
         unitNumber: generalControllers["מס ניידת"]?.text ?? "N/A",
         date: generalControllers["תאריך"]?.text ?? "N/A",
-        patientDetails:
-            patientControllers.map((key, value) => MapEntry(key, value.text)),
-        eventDetails:
-            eventControllers.map((key, value) => MapEntry(key, value.text)),
-        caseDetails:
-            caseControllers.map((key, value) => MapEntry(key, value.text)),
-        metrics: patientData.metrics,
-        treatments: patientData.treatments,
+        documentType: patientControllers["סוג תעודה"]?.text ?? "N/A",
+        age: int.tryParse(patientControllers["גיל"]?.text ?? "0") ?? 0,
+        fatherName: patientControllers["שם האב"]?.text ?? "N/A",
+        email: patientControllers["מייל"]?.text ?? "N/A",
+        gender: patientControllers["מין"]?.text ?? "N/A",
+        birthDate: patientControllers["ת. לידה"]?.text ?? "N/A",
+        healthFund: patientControllers["קופת חולים"]?.text ?? "N/A",
+        address: patientControllers["כתובת"]?.text ?? "N/A",
+        fullName: patientControllers["שם מלא"]?.text ?? "N/A",
+        phone: patientControllers["טלפון"]?.text ?? "N/A",
+        settlement: patientControllers["ישוב"]?.text ?? "N/A",
+        eventAddress: eventControllers["כתובת"]?.text ?? "N/A",
+        eventLocation: eventControllers["מקום האירוע"]?.text ?? "N/A",
+        city: eventControllers["עיר"]?.text ?? "N/A",
+        caseFound: caseControllers["המקרה שנמצא"]?.text ?? "N/A",
+        mainComplaint: caseControllers["תלונה עיקרית"]?.text ?? "N/A",
+        patientStatus: caseControllers["סטטוס המטופל"]?.text ?? "N/A",
+        medicalBackground: caseControllers["רקע רפואי"]?.text ?? "N/A",
+        allergies: caseControllers["רגישויות"]?.text ?? "N/A",
+        regularMedications: caseControllers["תרופות קבועות"]?.text ?? "N/A",
+        measurements: patientData.measurements,
+        proceduresPerformed: patientData.proceduresPerformed,
         medications: patientData.medications,
-        evacuation: patientData.evacuation,
+        evacuationType: patientData.evacuationType,
+        evacuationDestination: patientData.evacuationDestination,
+        hospitalName: patientData.hospitalName,
+        department: patientData.department,
+        receivingPersonName: patientData.receivingPersonName,
       );
 
       // HTTP POST request

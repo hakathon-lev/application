@@ -4,7 +4,8 @@ import 'tabs/info_analysis_tab.dart';
 import 'tabs/patient_management_tab.dart';
 import 'tabs/post_event_tab.dart';
 import 'tabs/home_page.dart';
-import 'pageList/contact_us_page.dart'; // Import the ContactUsPage file
+import 'pageList/contact_us_page.dart';
+import 'pageList/about_us.dart';
 
 void main() {
   runApp(const MaterialApp(
@@ -32,13 +33,25 @@ class HomeTab extends StatefulWidget {
 class _HomeTabState extends State<HomeTab> {
   int _currentIndex = 0;
 
-  final List<Widget> _tabs = [
-    const HomePage(),
-    const DataCollectionTab(),
-    const InfoAnalysisTab(),
-    const PatientManagementTab(),
-    const PostEventTab(),
-  ];
+  void _changeTab(int index) {
+    setState(() {
+      _currentIndex = index;
+    });
+  }
+
+  late List<Widget> _tabs;
+
+  @override
+  void initState() {
+    super.initState();
+    _tabs = [
+      HomePage(onTabChange: _changeTab),
+      const DataCollectionTab(),
+      const InfoAnalysisTab(),
+      const PatientManagementTab(),
+      const PostEventTab(),
+    ];
+  }
 
   final List<String> _tabTitles = [
     'Home',
@@ -70,14 +83,12 @@ class _HomeTabState extends State<HomeTab> {
               leading: const Icon(Icons.home),
               title: const Text('Home'),
               onTap: () {
-                setState(() {
-                  _currentIndex = 0;
-                });
+                _changeTab(0);
                 Navigator.pop(context);
               },
             ),
             ListTile(
-              leading: const Icon(Icons.contact_page),
+              leading: const Icon(Icons.alternate_email),
               title: const Text('Contact Us'),
               onTap: () {
                 Navigator.pop(context);
@@ -85,6 +96,19 @@ class _HomeTabState extends State<HomeTab> {
                   context,
                   MaterialPageRoute(
                     builder: (context) => const ContactUsPage(),
+                  ),
+                );
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.contact_page),
+              title: const Text('About Us'),
+              onTap: () {
+                Navigator.pop(context);
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const AboutUsPage(),
                   ),
                 );
               },
@@ -118,11 +142,7 @@ class _HomeTabState extends State<HomeTab> {
             label: 'Post-Event',
           ),
         ],
-        onTap: (index) {
-          setState(() {
-            _currentIndex = index;
-          });
-        },
+        onTap: _changeTab,
       ),
     );
   }
