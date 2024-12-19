@@ -24,9 +24,9 @@ class AboutUsPage extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                const CircleAvatar(
-                  radius: 60,
-                  backgroundImage: AssetImage(
+                CircleAvatar(
+                  radius: MediaQuery.of(context).size.width < 600 ? 40 : 60,
+                  backgroundImage: const AssetImage(
                       'assets/images/image.png'), // Replace with your image path
                 ),
                 const SizedBox(height: 20),
@@ -87,22 +87,26 @@ class AboutUsPage extends StatelessWidget {
                     ListTile(
                       leading: Icon(Icons.check_circle, color: Colors.orange),
                       title: Text(
-                          'Innovation: Constantly improving through advanced technology.'),
+                          'Innovation: Constantly improving through advanced technology.',
+                          softWrap: true),
                     ),
                     ListTile(
                       leading: Icon(Icons.check_circle, color: Colors.orange),
                       title: Text(
-                          'Efficiency: Streamlining processes to save time and effort.'),
+                          'Efficiency: Streamlining processes to save time and effort.',
+                          softWrap: true),
                     ),
                     ListTile(
                       leading: Icon(Icons.check_circle, color: Colors.orange),
                       title: Text(
-                          'Accuracy: Ensuring data reliability for critical decisions.'),
+                          'Accuracy: Ensuring data reliability for critical decisions.',
+                          softWrap: true),
                     ),
                     ListTile(
                       leading: Icon(Icons.check_circle, color: Colors.orange),
                       title: Text(
-                          'Empathy: Supporting healthcare professionals in high-pressure situations.'),
+                          'Empathy: Supporting healthcare professionals in high-pressure situations.',
+                          softWrap: true),
                     ),
                   ],
                 ),
@@ -128,32 +132,32 @@ class AboutUsPage extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 20),
-                const Row(
+                Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
                     CircleAvatar(
-                      radius: 40,
-                      backgroundImage: AssetImage(
+                      radius: MediaQuery.of(context).size.width < 600 ? 30 : 40,
+                      backgroundImage: const AssetImage(
                           'assets/images/team_member4.png'), // Replace with team member images
                     ),
                     CircleAvatar(
-                      radius: 40,
-                      backgroundImage: AssetImage(
+                      radius: MediaQuery.of(context).size.width < 600 ? 30 : 40,
+                      backgroundImage: const AssetImage(
                           'assets/images/team_member5.png'), // Replace with team member images
                     ),
                     CircleAvatar(
-                      radius: 40,
-                      backgroundImage: AssetImage(
+                      radius: MediaQuery.of(context).size.width < 600 ? 30 : 40,
+                      backgroundImage: const AssetImage(
                           'assets/images/team_member1.jpg'), // Replace with team member images
                     ),
                     CircleAvatar(
-                      radius: 40,
-                      backgroundImage: AssetImage(
+                      radius: MediaQuery.of(context).size.width < 600 ? 30 : 40,
+                      backgroundImage: const AssetImage(
                           'assets/images/team_member2.png'), // Replace with team member images
                     ),
                     CircleAvatar(
-                      radius: 40,
-                      backgroundImage: AssetImage(
+                      radius: MediaQuery.of(context).size.width < 600 ? 30 : 40,
+                      backgroundImage: const AssetImage(
                           'assets/images/team_member3.jpg'), // Replace with team member images
                     ),
                   ],
