@@ -5,6 +5,12 @@ class AboutUsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Determine screen width
+    final double screenWidth = MediaQuery.of(context).size.width;
+
+    // Adjust the CircleAvatar radius based on the screen width
+    final double avatarRadius = screenWidth < 600 ? 60 : 100;
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('About Us'),
@@ -24,9 +30,9 @@ class AboutUsPage extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                const CircleAvatar(
-                  radius: 60,
-                  backgroundImage: AssetImage(
+                CircleAvatar(
+                  radius: avatarRadius,
+                  backgroundImage: const AssetImage(
                       'assets/images/image.png'), // Replace with your image path
                 ),
                 const SizedBox(height: 20),
@@ -128,8 +134,10 @@ class AboutUsPage extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 20),
-                const Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                const Wrap(
+                  spacing: 20, // Horizontal spacing between the avatars
+                  runSpacing: 20, // Vertical spacing between rows
+                  alignment: WrapAlignment.center,
                   children: [
                     CircleAvatar(
                       radius: 40,
