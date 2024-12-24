@@ -167,7 +167,7 @@ def insert_case():
         return jsonify({"error": str(e)}), 500
     
 
-@app.route('/api/main', methods=['GET'])
+@app.route('/transcribe', methods=['POST'])
 def call_backend():
     suggestion,json_object = main.main()
     return jsonify({"message": suggestion})
