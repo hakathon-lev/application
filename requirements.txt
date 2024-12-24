@@ -1,2 +1,10 @@
 flutter
 android studio
+SpeechRecognition
+sounddevice
+numpy
+openai
+sumy
+pymongo
+python-dotenv
+google.generativeai

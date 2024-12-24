@@ -7,6 +7,7 @@ from flask import Flask, jsonify, request
 from flask_cors import CORS
 from datetime import datetime
 from pymongo import MongoClient
+from backend.src import main
 
 
 app = Flask(__name__)
@@ -164,6 +165,12 @@ def insert_case():
     except Exception as e:
         return jsonify({"error": str(e)}), 500
     
+
+@app.route('/api/main', methods=['GET'])
+def main():
+    suggestion,json_object = main.main()
+    return jsonify({"message": suggestion})
+
 
 
 if __name__ == '__main__':
