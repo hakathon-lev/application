@@ -1,0 +1,16 @@
+{
+    "home": "Home",
+    "dataCollection": "Data Collection",
+    "infoAnalysis": "Information Analysis",
+    "patientManagement": "Patient Management",
+    "postEvent": "Post-Event",
+    "contactUs": "Contact Us",
+    "aboutUs": "About Us",
+    "navigation": "Navigation",
+
+
+    "welcome_title": "Emergency Documentation App",
+    "welcome_subtitle": "Your Lifeline in Critical Moments",
+    "get_started_button": "Get Started"
+}
+  

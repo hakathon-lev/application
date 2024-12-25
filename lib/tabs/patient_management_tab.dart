@@ -209,11 +209,17 @@ class _PatientManagementTabState extends State<PatientManagementTab> {
         receivingPersonName: patientData.receivingPersonName,
       );
 
+      // Update the server URL to the remote endpoint
+      final url = Uri.parse("https://your-remote-server.com/api/insert_case");
+
       // HTTP POST request
-      final url = Uri.parse("http://127.0.0.1:5000/insert_case");
       final response = await http.post(
         url,
-        headers: {"Content-Type": "application/json"},
+        headers: {
+          "Content-Type": "application/json",
+          // Add authentication headers if needed
+          // "Authorization": "Bearer your_token"
+        },
         body: jsonEncode(updatedPatientData.toJson()),
       );
 
@@ -223,12 +229,67 @@ class _PatientManagementTabState extends State<PatientManagementTab> {
         );
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error: ${response.body}')),
+          SnackBar(content: Text('Server Error: ${response.body}')),
         );
       }
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Error: $e')),
+      );
+    }
+  }
+
+  void _loadJsonData(String jsonString) {
+    try {
+      final jsonData = jsonDecode(jsonString);
+
+      // Assuming jsonData matches PatientData structure
+      final loadedPatientData = PatientData(
+        caseNumber: jsonData['caseNumber'] ?? "N/A",
+        unitNumber: jsonData['unitNumber'] ?? "N/A",
+        date: jsonData['date'] ?? "N/A",
+        documentType: jsonData['documentType'] ?? "N/A",
+        age: jsonData['age'] ?? 0,
+        fatherName: jsonData['fatherName'] ?? "N/A",
+        email: jsonData['email'] ?? "N/A",
+        gender: jsonData['gender'] ?? "N/A",
+        birthDate: jsonData['birthDate'] ?? "N/A",
+        healthFund: jsonData['healthFund'] ?? "N/A",
+        address: jsonData['address'] ?? "N/A",
+        fullName: jsonData['fullName'] ?? "N/A",
+        phone: jsonData['phone'] ?? "N/A",
+        settlement: jsonData['settlement'] ?? "N/A",
+        eventAddress: jsonData['eventAddress'] ?? "N/A",
+        eventLocation: jsonData['eventLocation'] ?? "N/A",
+        city: jsonData['city'] ?? "N/A",
+        caseFound: jsonData['caseFound'] ?? "N/A",
+        mainComplaint: jsonData['mainComplaint'] ?? "N/A",
+        patientStatus: jsonData['patientStatus'] ?? "N/A",
+        medicalBackground: jsonData['medicalBackground'] ?? "N/A",
+        allergies: jsonData['allergies'] ?? "N/A",
+        regularMedications: jsonData['regularMedications'] ?? "N/A",
+        measurements:
+            List<Map<String, dynamic>>.from(jsonData['measurements'] ?? []),
+        proceduresPerformed: List<Map<String, dynamic>>.from(
+            jsonData['proceduresPerformed'] ?? []),
+        medications:
+            List<Map<String, dynamic>>.from(jsonData['medications'] ?? []),
+        evacuationType: jsonData['evacuationType'] ?? "N/A",
+        evacuationDestination: jsonData['evacuationDestination'] ?? "N/A",
+        hospitalName: jsonData['hospitalName'] ?? "N/A",
+        department: jsonData['department'] ?? "N/A",
+        receivingPersonName: jsonData['receivingPersonName'] ?? "N/A",
+      );
+
+      // Update UI or state with the loadedPatientData as needed
+      // Example: print(loadedPatientData.fullName);
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('נתונים נטענו בהצלחה!')),
+      );
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error loading JSON: $e')),
       );
     }
   }

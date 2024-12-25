@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../services/localization_service.dart';
 
 class HomePage extends StatelessWidget {
   final Function(int)? onTabChange;
@@ -10,6 +11,7 @@ class HomePage extends StatelessWidget {
     return Scaffold(
       body: SafeArea(
         child: Container(
+          // Gradient background
           decoration: BoxDecoration(
             gradient: LinearGradient(
               begin: Alignment.topLeft,
@@ -31,7 +33,7 @@ class HomePage extends StatelessWidget {
                   decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(20),
-                    boxShadow: [
+                    boxShadow: const [
                       BoxShadow(
                         color: Colors.black26,
                         blurRadius: 10,
@@ -44,15 +46,16 @@ class HomePage extends StatelessWidget {
                       Icons.document_scanner_outlined,
                       size: 80,
                       color: Colors.orange.shade700,
+                      semanticLabel: 'App Logo Icon',
                     ),
                   ),
                 ),
                 const SizedBox(height: 30),
                 // Welcome Text
                 Text(
-                  'Emergency Documentation App',
+                  LocalizationService.translate('welcome_title'),
                   textAlign: TextAlign.center,
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontSize: 24,
                     fontWeight: FontWeight.bold,
                     color: Colors.white,
@@ -68,8 +71,9 @@ class HomePage extends StatelessWidget {
                 const SizedBox(height: 20),
                 // Subtitle
                 Text(
-                  'Your Lifeline in Critical Moments',
-                  style: TextStyle(
+                  LocalizationService.translate('welcome_subtitle'),
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(
                     fontSize: 16,
                     color: Colors.white70,
                     fontStyle: FontStyle.italic,
@@ -79,9 +83,8 @@ class HomePage extends StatelessWidget {
                 // Start Button
                 ElevatedButton(
                   onPressed: () {
-                    // Navigate to Info Analysis tab
                     if (onTabChange != null) {
-                      onTabChange!(2); // Index 2 is Info Analysis tab
+                      onTabChange!(2); // Navigate to Info Analysis tab
                     }
                   },
                   style: ElevatedButton.styleFrom(
@@ -94,7 +97,7 @@ class HomePage extends StatelessWidget {
                     elevation: 5,
                   ),
                   child: Text(
-                    'Get Started',
+                    LocalizationService.translate('get_started_button'),
                     style: TextStyle(
                       color: Colors.orange.shade800,
                       fontSize: 18,

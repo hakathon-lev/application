@@ -1,3 +1,4 @@
+//Class for the patient form
 class PatientData {
   final String caseNumber;
   final String unitNumber;

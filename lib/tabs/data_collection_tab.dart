@@ -2,7 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-import '../data_service.dart'; // Import the separated file
+import '../services/data_service.dart'; // Import the separated file
 
 class DataCollectionTab extends StatefulWidget {
   const DataCollectionTab({super.key});
