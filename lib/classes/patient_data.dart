@@ -1,4 +1,4 @@
-//Class for the patient form
+// Class for the patient form
 class PatientData {
   final String caseNumber;
   final String unitNumber;
@@ -6,7 +6,7 @@ class PatientData {
 
   // Patient Details
   final String documentType;
-  final int age;
+  final String age;
   final String fatherName;
   final String email;
   final String gender;
@@ -16,11 +16,13 @@ class PatientData {
   final String fullName;
   final String phone;
   final String settlement;
+  final String bloodType; // New field
 
   // Event Details
   final String eventAddress;
   final String eventLocation;
   final String city;
+  final String incidentTime; // New field
 
   // Case Details
   final String caseFound;
@@ -29,15 +31,16 @@ class PatientData {
   final String medicalBackground;
   final String allergies;
   final String regularMedications;
+  final String injurySeverity; // New field
 
   // Measurements
-  final List<Map<String, dynamic>> measurements;
+  final List<Map<String, String>> measurements;
 
   // Procedures Performed
-  final List<Map<String, dynamic>> proceduresPerformed;
+  final List<Map<String, String>> proceduresPerformed;
 
   // Medications
-  final List<Map<String, dynamic>> medications;
+  final List<Map<String, String>> medications;
 
   // Evacuation
   final String evacuationType;
@@ -53,7 +56,7 @@ class PatientData {
 
     // Patient Details
     this.documentType = '',
-    this.age = 0,
+    this.age = '',
     this.fatherName = '',
     this.email = '',
     this.gender = '',
@@ -63,11 +66,13 @@ class PatientData {
     this.fullName = '',
     this.phone = '',
     this.settlement = '',
+    this.bloodType = '',
 
     // Event Details
     this.eventAddress = '',
     this.eventLocation = '',
     this.city = '',
+    this.incidentTime = '',
 
     // Case Details
     this.caseFound = '',
@@ -76,6 +81,7 @@ class PatientData {
     this.medicalBackground = '',
     this.allergies = '',
     this.regularMedications = '',
+    this.injurySeverity = '',
 
     // Measurements
     this.measurements = const [],
@@ -111,11 +117,13 @@ class PatientData {
         "שם מלא": fullName,
         "טלפון": phone,
         "ישוב": settlement,
+        "סוג דם": bloodType, // New field
       },
       "פרטי האירוע": {
         "כתובת": eventAddress,
         "מקום האירוע": eventLocation,
         "עיר": city,
+        "שעת האירוע": incidentTime, // New field
       },
       "פירוט המקרה": {
         "המקרה שנמצא": caseFound,
@@ -124,9 +132,10 @@ class PatientData {
         "רקע רפואי": medicalBackground,
         "רגישויות": allergies,
         "תרופות קבועות": regularMedications,
+        "חומרת הפציעה": injurySeverity, // New field
       },
-      "measurments": measurements,
-      "procedures_performed": proceduresPerformed,
+      "מדדים": measurements,
+      "טיפול שניתן": proceduresPerformed,
       "טיפול תרופתי": medications,
       "פינוי": {
         "אופן הפינוי": evacuationType,

@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import 'services/localization_service.dart';
-import 'tabs/data_collection_tab.dart';
 import 'tabs/info_analysis_tab.dart';
 import 'tabs/patient_management_tab.dart';
 import 'tabs/post_event_tab.dart';
 import 'tabs/home_page.dart';
 import 'pageList/contact_us_page.dart';
 import 'pageList/about_us.dart';
-import 'pageList/login.dart'; // Import LoginPage
+import 'pageList/login.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -58,7 +57,6 @@ class _HomeTabState extends State<HomeTab> {
     super.initState();
     _tabs = [
       HomePage(onTabChange: _changeTab),
-      const DataCollectionTab(),
       const InfoAnalysisTab(),
       const PatientManagementTab(),
       const PostEventTab(),
@@ -69,7 +67,6 @@ class _HomeTabState extends State<HomeTab> {
   Widget build(BuildContext context) {
     final tabTitles = [
       LocalizationService.translate('home'),
-      LocalizationService.translate('dataCollection'),
       LocalizationService.translate('infoAnalysis'),
       LocalizationService.translate('patientManagement'),
       LocalizationService.translate('postEvent'),
@@ -144,10 +141,6 @@ class _HomeTabState extends State<HomeTab> {
           BottomNavigationBarItem(
             icon: const Icon(Icons.home),
             label: LocalizationService.translate('home'),
-          ),
-          BottomNavigationBarItem(
-            icon: const Icon(Icons.collections),
-            label: LocalizationService.translate('dataCollection'),
           ),
           BottomNavigationBarItem(
             icon: const Icon(Icons.analytics_outlined),

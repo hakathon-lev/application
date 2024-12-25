@@ -21,7 +21,7 @@ class _ContactUsPageState extends State<ContactUsPage> {
     final smtpServer = gmail(userEmail, password);
 
     final message = Message()
-      ..from = Address(userEmail, 'Your App Name')
+      ..from = const Address(userEmail, 'Your App Name')
       ..recipients
           .add('recipient_email@gamil.com') // Replace with recipient email
       ..subject = 'Contact Us Message from ${_nameController.text}'
